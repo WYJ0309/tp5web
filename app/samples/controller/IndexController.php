@@ -21,6 +21,8 @@ class IndexController extends HomeBaseController
         $slide = Db::name("slide_item")->where(array("slide_id"=>1,"status"=>1))->select()->toArray();
         $this->assign("slideArr",$slide);
         $this->assign('site_info', cmf_get_option('site_info'));
+        $article = Db::name("portal_post")->where(array("post_type"=>1,"post_status"=>1,"recommended"=>1))->field("post_title,post_keywords,post_excerpt,thumbnail")->select()->toArray();
+        $this->assign("artRec",$article);
         return $this->fetch(':index');
     }
     public function about()

@@ -378,47 +378,49 @@
                         <div class="featured-event-content">
                             <figure class="event-thumbnail position-relative m-0">
                                 <a href="#"><img src="/upload/{$artRec[0]['thumbnail']}" alt="{$artRec[0]['post_title']}"></a>
-                                <div class="posted-date position-absolute"><div class="day">23</div><div class="month">mar</div></div>
+                                <div class="posted-date position-absolute"><div class="day">{$artRec[0]['create_time']|date='d',###}</div><div class="month">{$artRec[0]['create_time']|date='M',###}</div></div>
                             </figure>
                             <header class="entry-header flex flex-wrap align-items-center">
                                 <h2 class="entry-title"><a href="#">{$artRec[0]['post_title']}</a></h2>
-                                <div class="event-location"><i class="fa fa-map-marker"></i>{$artRec[0]['post_title']}</div>
-                                <div class="event-duration"><i class="fa fa-calendar"></i>10 Dec - 12 dec</div>
+                                <div class="event-location"><i class="fa fa-map-marker"></i>{$artRec[0]['post_excerpt']|mb_substr=0,72,'utf-8'}</div>
+                                <div class="event-duration"><i class="fa fa-calendar"></i>{$artRec[0]['create_time']|date='Y-m-d H:i',###}</div>
                             </header>
                         </div>
                     </div>
                 </notempty>
                 <div class="col-12 col-lg-6 mt-5 mt-lg-0">
-                    <div class="event-content flex flex-wrap justify-content-between align-content-stretch">
-                        <figure class="event-thumbnail"><a href="#"><img src="__TMPL__/images/event-2.jpg" alt=""></a></figure>
-                        <div class="event-content-wrap">
-                            <header class="entry-header">
-                                <div class="posted-date"><i class="fa fa-calendar"></i> 22 Mar 2018</div>
-                                <h2 class="entry-title"><a href="#">Personalized online learning experience</a></h2>
-                                <div class="entry-meta flex flex-wrap align-items-center">
-                                    <div class="post-author"><a href="#">Ms. Lara Croft </a></div>
-                                    <div class="post-comments">02 Comments  </div>
-                                </div>
-                            </header>
-                            <div class="entry-content"><p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt.</p></div>
-                        </div>
-                    </div>
-                    <div class="event-content flex flex-wrap justify-content-between align-content-lg-stretch">
-                        <figure class="event-thumbnail"><a href="#"><img src="__TMPL__/images/event-3.jpg" alt=""></a></figure>
-                        <div class="event-content-wrap">
-                            <header class="entry-header">
-                                <div class="posted-date"><i class="fa fa-calendar"></i> 22 Mar 2018</div>
-                                <h2 class="entry-title"><a href="#">Which investment project should my company choose?</a></h2>
-                                <div class="entry-meta flex flex-wrap align-items-center">
-                                    <div class="post-author"><a href="#">Ms. Lara Croft </a></div>
-                                    <div class="post-comments">02 Comments  </div>
-                                </div>
-                            </header>
-                            <div class="entry-content">
-                                <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt.</p>
+                    <notempty name="$artRec[1]">
+                        <div class="event-content flex flex-wrap justify-content-between align-content-stretch">
+                            <figure class="event-thumbnail"><a href="#"><img src="/upload/{$artRec[1]['thumbnail']}" width="200" height="200" alt="{$artRec[1]['post_title']}"></a></figure>
+                            <div class="event-content-wrap">
+                                <header class="entry-header">
+                                    <div class="posted-date"><i class="fa fa-calendar"></i>{$artRec[1]['create_time']|date='Y-m-d H:i',###}</div>
+                                    <h2 class="entry-title"><a href="#">{$artRec[1]['post_title']}</a></h2>
+                                    <div class="entry-meta flex flex-wrap align-items-center">
+                                        <div class="post-author"><a href="#">评论数：{$artRec[1]['comment_count']}</a></div>
+                                        <!--<div class="post-comments">{$artRec[1]['comment_count']}</div>-->
+                                    </div>
+                                </header>
+                                <div class="entry-content"><p>{$artRec[1]['post_excerpt']|mb_substr=0,48,'utf-8'}</p></div>
                             </div>
                         </div>
-                    </div>
+                    </notempty>
+                    <notempty name="$artRec[2]">
+                        <div class="event-content flex flex-wrap justify-content-between align-content-lg-stretch">
+                            <figure class="event-thumbnail"><a href="#"><img src="/upload/{$artRec[2]['thumbnail']}" width="200" height="200" alt="{$artRec[2]['post_title']}"></a></figure>
+                            <div class="event-content-wrap">
+                                <header class="entry-header">
+                                    <div class="posted-date"><i class="fa fa-calendar"></i>{$artRec[2]['create_time']|date='Y-m-d H:i',###}</div>
+                                    <h2 class="entry-title"><a href="#">{$artRec[2]['post_title']}</a></h2>
+                                    <div class="entry-meta flex flex-wrap align-items-center">
+                                        <div class="post-author"><a href="#">评论数：{$artRec[2]['comment_count']}</a></div>
+                                        <!--<div class="post-comments">{$artRec[2]['comment_count']} </div>-->
+                                    </div>
+                                </header>
+                                <div class="entry-content"><p>{$artRec[2]['post_excerpt']|mb_substr=0,48,'utf-8'}</p></div>
+                            </div>
+                        </div>
+                    </notempty>
                 </div>
             </div>
         </div>

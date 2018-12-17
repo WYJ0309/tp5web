@@ -148,7 +148,7 @@ class ProductCategoryController extends AdminBaseController
        }
        $checkArt  = Db::name("product_category_post")->where(array("category_id"=>$id))->count();
        if($checkArt){
-            $this->error("该分类下有已发布的文章，不可以删除");
+            $this->error("该分类下有已发布的产品，不可以删除");
        }
        Db::name("product_category")->where(array("id"=>$id))->delete();
        $this->success("删除成功");

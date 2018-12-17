@@ -10,77 +10,30 @@ class ProductController extends AdminBaseController
     //产品列表
     public function index()
     {
-        $content = hook_one('portal_admin_article_index_view');
 
-        if (!empty($content)) {
-            return $content;
+        $keyword = input("keyword");
+        $where = array();
+        if($keyword){
+            $where["post_title"] = array("like","%".$keyword."%");
         }
+        $parent_id = input("parent_id");
+        if($parent_id){
 
-        $param = $this->request->param();
-
-        $categoryId = $this->request->param('category', 0, 'intval');
-
-        $where = [
-            'create_time' => ['>=', 0],
-            'delete_time' => 0
-        ];
-
-        $startTime = empty($filter['start_time']) ? 0 : strtotime($filter['start_time']);
-        $endTime   = empty($filter['end_time']) ? 0 : strtotime($filter['end_time']);
-        if (!empty($startTime) && !empty($endTime)) {
-            $where['published_time'] = [['>= time', $startTime], ['<= time', $endTime]];
-        } else {
-            if (!empty($startTime)) {
-                $where['published_time'] = ['>= time', $startTime];
-            }
-            if (!empty($endTime)) {
-                $where['published_time'] = ['<= time', $endTime];
-            }
         }
-
-        $keyword = empty($filter['keyword']) ? '' : $filter['keyword'];
-        if (!empty($keyword)) {
-            $where['post_title'] = ['like', "%$keyword%"];
-        }
-
-        if ($isPage) {
-            $where['post_type'] = 2;
-        } else {
-            $where['post_type'] = 1;
-        }
-
-        $portalPostModel = new PortalPostModel();
-        $data        = Db::name("product_post")->field($field)
-            ->where($where)
-            ->order('update_time', 'DESC')
-            ->paginate(10);
-
-
-        $this->assign('start_time', isset($param['start_time']) ? $param['start_time'] : '');
-        $this->assign('end_time', isset($param['end_time']) ? $param['end_time'] : '');
+        $data= Db::name("product_post")->field("id,post_hits,id,published_time,post_title,post_keywords,thumbnail,recommended,post_status,is_top")->order('create_time DESC')->paginate(20);
         $this->assign('keyword', isset($param['keyword']) ? $param['keyword'] : '');
-        $this->assign('articles', $data->items());
-        $this->assign('category_tree', $categoryTree);
-        $this->assign('category', $categoryId);
+        $this->assign('parent_id', isset($param['parent_id']) ? $param['parent_id'] : '');
+        $this->assign('products', $data->items());
         $this->assign('page', $data->render());
 
 
+
+        $cateListP = Db::name("product_category")->where(array("parent_id"=>0))->field("id,name,list_order,description,status")->select()->toArray();
+        $this->assign('cateListP', $cateListP);
         return $this->fetch();
     }
 
-    /**
-     * 添加文章
-     * @adminMenu(
-     *     'name'   => '添加文章',
-     *     'parent' => 'index',
-     *     'display'=> false,
-     *     'hasView'=> true,
-     *     'order'  => 10000,
-     *     'icon'   => '',
-     *     'remark' => '添加文章',
-     *     'param'  => ''
-     * )
-     */
+    //添加产品
     public function add()
     {
         $content = hook_one('portal_admin_article_add_view');
@@ -95,19 +48,7 @@ class ProductController extends AdminBaseController
         return $this->fetch();
     }
 
-    /**
-     * 添加文章提交
-     * @adminMenu(
-     *     'name'   => '添加文章提交',
-     *     'parent' => 'index',
-     *     'display'=> false,
-     *     'hasView'=> false,
-     *     'order'  => 10000,
-     *     'icon'   => '',
-     *     'remark' => '添加文章提交',
-     *     'param'  => ''
-     * )
-     */
+    //保存产品添加
     public function addPost()
     {
         if ($this->request->isPost()) {
@@ -159,19 +100,7 @@ class ProductController extends AdminBaseController
 
     }
 
-    /**
-     * 编辑文章
-     * @adminMenu(
-     *     'name'   => '编辑文章',
-     *     'parent' => 'index',
-     *     'display'=> false,
-     *     'hasView'=> true,
-     *     'order'  => 10000,
-     *     'icon'   => '',
-     *     'remark' => '编辑文章',
-     *     'param'  => ''
-     * )
-     */
+    //编辑产品
     public function edit()
     {
         $content = hook_one('portal_admin_article_edit_view');
@@ -197,19 +126,7 @@ class ProductController extends AdminBaseController
         return $this->fetch();
     }
 
-    /**
-     * 编辑文章提交
-     * @adminMenu(
-     *     'name'   => '编辑文章提交',
-     *     'parent' => 'index',
-     *     'display'=> false,
-     *     'hasView'=> false,
-     *     'order'  => 10000,
-     *     'icon'   => '',
-     *     'remark' => '编辑文章提交',
-     *     'param'  => ''
-     * )
-     */
+    //编辑保存产品
     public function editPost()
     {
 
@@ -258,19 +175,7 @@ class ProductController extends AdminBaseController
         }
     }
 
-    /**
-     * 文章删除
-     * @adminMenu(
-     *     'name'   => '文章删除',
-     *     'parent' => 'index',
-     *     'display'=> false,
-     *     'hasView'=> false,
-     *     'order'  => 10000,
-     *     'icon'   => '',
-     *     'remark' => '文章删除',
-     *     'param'  => ''
-     * )
-     */
+    //产品删除
     public function delete()
     {
         $param           = $this->request->param();
@@ -321,28 +226,15 @@ class ProductController extends AdminBaseController
         }
     }
 
-    /**
-     * 文章发布
-     * @adminMenu(
-     *     'name'   => '文章发布',
-     *     'parent' => 'index',
-     *     'display'=> false,
-     *     'hasView'=> false,
-     *     'order'  => 10000,
-     *     'icon'   => '',
-     *     'remark' => '文章发布',
-     *     'param'  => ''
-     * )
-     */
+    //产品发布
     public function publish()
     {
         $param           = $this->request->param();
-        $portalPostModel = new PortalPostModel();
 
         if (isset($param['ids']) && isset($param["yes"])) {
             $ids = $this->request->param('ids/a');
 
-            $portalPostModel->where(['id' => ['in', $ids]])->update(['post_status' => 1, 'published_time' => time()]);
+            Db::name("product_post")->where(['id' => ['in', implode(",",$ids)]])->update(['post_status' => 1, 'published_time' => time()]);
 
             $this->success("发布成功！", '');
         }
@@ -350,35 +242,22 @@ class ProductController extends AdminBaseController
         if (isset($param['ids']) && isset($param["no"])) {
             $ids = $this->request->param('ids/a');
 
-            $portalPostModel->where(['id' => ['in', $ids]])->update(['post_status' => 0]);
+            Db::name("product_post")->where(['id' => ['in', implode(",",$ids)]])->update(['post_status' => 0]);
 
             $this->success("取消发布成功！", '');
         }
 
     }
 
-    /**
-     * 文章置顶
-     * @adminMenu(
-     *     'name'   => '文章置顶',
-     *     'parent' => 'index',
-     *     'display'=> false,
-     *     'hasView'=> false,
-     *     'order'  => 10000,
-     *     'icon'   => '',
-     *     'remark' => '文章置顶',
-     *     'param'  => ''
-     * )
-     */
+    //产品置顶
     public function top()
     {
         $param           = $this->request->param();
-        $portalPostModel = new PortalPostModel();
 
         if (isset($param['ids']) && isset($param["yes"])) {
             $ids = $this->request->param('ids/a');
 
-            $portalPostModel->where(['id' => ['in', $ids]])->update(['is_top' => 1]);
+            Db::name("product_post")->where(['id' => ['in', implode(",",$ids)]])->update(['is_top' => 1]);
 
             $this->success("置顶成功！", '');
 
@@ -387,34 +266,21 @@ class ProductController extends AdminBaseController
         if (isset($_POST['ids']) && isset($param["no"])) {
             $ids = $this->request->param('ids/a');
 
-            $portalPostModel->where(['id' => ['in', $ids]])->update(['is_top' => 0]);
+            Db::name("product_post")->where(['id' => ['in', implode(",",$ids)]])->update(['is_top' => 0]);
 
             $this->success("取消置顶成功！", '');
         }
     }
 
-    /**
-     * 文章推荐
-     * @adminMenu(
-     *     'name'   => '文章推荐',
-     *     'parent' => 'index',
-     *     'display'=> false,
-     *     'hasView'=> false,
-     *     'order'  => 10000,
-     *     'icon'   => '',
-     *     'remark' => '文章推荐',
-     *     'param'  => ''
-     * )
-     */
+    //产品推荐
     public function recommend()
     {
         $param           = $this->request->param();
-        $portalPostModel = new PortalPostModel();
 
         if (isset($param['ids']) && isset($param["yes"])) {
             $ids = $this->request->param('ids/a');
 
-            $portalPostModel->where(['id' => ['in', $ids]])->update(['recommended' => 1]);
+            Db::name("product_post")->where(['id' => ['in', implode(",",$ids)]])->update(['recommended' => 1]);
 
             $this->success("推荐成功！", '');
 
@@ -422,41 +288,11 @@ class ProductController extends AdminBaseController
         if (isset($param['ids']) && isset($param["no"])) {
             $ids = $this->request->param('ids/a');
 
-            $portalPostModel->where(['id' => ['in', $ids]])->update(['recommended' => 0]);
+            Db::name("product_post")->where(['id' => ['in', implode(",",$ids)]])->update(['recommended' => 0]);
 
             $this->success("取消推荐成功！", '');
 
         }
     }
-
-    /**
-     * 文章排序
-     * @adminMenu(
-     *     'name'   => '文章排序',
-     *     'parent' => 'index',
-     *     'display'=> false,
-     *     'hasView'=> false,
-     *     'order'  => 10000,
-     *     'icon'   => '',
-     *     'remark' => '文章排序',
-     *     'param'  => ''
-     * )
-     */
-    public function listOrder()
-    {
-        parent::listOrders(Db::name('portal_category_post'));
-        $this->success("排序更新成功！", '');
-    }
-
-    public function move()
-    {
-
-    }
-
-    public function copy()
-    {
-
-    }
-
 
 }

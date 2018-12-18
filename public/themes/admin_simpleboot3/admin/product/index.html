@@ -49,7 +49,7 @@
                 </th>
                 <th width="50">ID</th>
                 <th>产品名称</th>
-                <th>分类</th>
+                <th>分类名称</th>
                 <th width="65">点击量</th>
                 <th width="160">关键字</th>
                 <th width="130">缩略图</th>
@@ -66,7 +66,7 @@
                     </td>
                     <td>{$vo.id}</td>
                     <td>{$vo.post_title}</td>
-                    <td>产品分类</td>
+                    <td>{$cateArr[$vo.cate_id]}</td>
                     <td>{$vo.post_hits|default=0}</td>
                     <td>{$vo.post_keywords}</td>
                     <td>

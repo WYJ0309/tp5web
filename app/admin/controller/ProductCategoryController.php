@@ -146,7 +146,7 @@ class ProductCategoryController extends AdminBaseController
        if($checkP){
             $this->error("该分类下有子分类，不可以删除");
        }
-       $checkArt  = Db::name("product_category_post")->where(array("category_id"=>$id))->count();
+       $checkArt  = Db::name("product_post")->where(array("cate_id"=>$id))->count();
        if($checkArt){
             $this->error("该分类下有已发布的产品，不可以删除");
        }

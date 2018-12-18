@@ -86,7 +86,7 @@
                         <td>{$vo.description}</td>
                         <td>{$vo.status?'显示':'隐藏'}</td>
                         <td>
-                            <a href="{:url('AdminCategory/add', ['parent' => $vo.id])}">添加子分类</a>
+                            <!-- <a href="{:url('AdminCategory/add', ['parent' => $vo.id])}">添加子分类</a> -->
                             <a href="{:url('AdminCategory/edit',['id'=>$vo.id])}">编辑</a>
                             <a class="js-ajax-delete" href="{:url('AdminCategory/delete',['id'=>$vo.id])}">删除</a>
                             <empty name="vo.status">

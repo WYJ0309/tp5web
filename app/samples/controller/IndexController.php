@@ -23,6 +23,13 @@ class IndexController extends HomeBaseController
         $this->assign('site_info', cmf_get_option('site_info'));
         $article = Db::name("portal_post")->where(array("post_type"=>1,"post_status"=>1,"recommended"=>1))->field("post_title,post_keywords,post_excerpt,thumbnail,create_time,comment_count,post_excerpt")->select()->toArray();
         $this->assign("artRec",$article);
+
+        $product = Db::name("product_post")->where(array("post_type"=>1,"post_status"=>1,"recommended"=>1))->field("post_title,post_keywords,post_excerpt,thumbnail,create_time,comment_count")->select()->toArray();
+        $this->assign("productList",$product);
+        $cateListP = Db::name("product_category")->where(array("parent_id"=>0))->field("id,name,list_order,description,status")->select()->toArray();
+        $this->assign('cateListP', $cateListP);
+
+
         return $this->fetch(':index');
     }
     public function about()

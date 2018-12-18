@@ -42,7 +42,7 @@
                         <td>{$vo.description}</td>
                         <td>{$vo.status?'显示':'隐藏'}</td>
                         <td>
-                            <a href="{:url('ProductCategory/add', ['parent_id' => $vo.id])}">添加子分类</a>
+                            <!-- <a href="{:url('ProductCategory/add', ['parent_id' => $vo.id])}">添加子分类</a> -->
                             <a href="{:url('ProductCategory/edit',['id'=>$vo.id])}">编辑</a>
                             <a class="js-ajax-delete" href="{:url('ProductCategory/delete',['id'=>$vo.id])}">删除</a>
                             <empty name="vo.status">
@@ -55,7 +55,7 @@
                         </td>
                     </tr>
                     <notempty name="$vo.sonArr">
-                        <volist name="$vo.sonArr" id="son">
+                        <!-- <volist name="$vo.sonArr" id="son">
                             <tr>
                                 <td><input type="checkbox" class="js-check" data-yid="js-check-y" data-xid="js-check-x" name="ids[]" value="{$son.id}"></td>
                                 <td><input name="list_orders[{$son.id}]" type="text" size="3" value="{$son.list_order}" class="input-order"></td>
@@ -76,7 +76,7 @@
                                     </empty>
                                 </td>
                             </tr>
-                        </volist>
+                        </volist> -->
                     </notempty>
                 </foreach>
             </tbody>

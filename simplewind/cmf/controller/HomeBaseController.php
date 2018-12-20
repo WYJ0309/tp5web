@@ -25,7 +25,22 @@ class HomeBaseController extends BaseController
         parent::_initialize();
         $siteInfo = cmf_get_site_info();
         View::share('site_info', $siteInfo);
-        $nav_menu = Db::name("nav_menu")->where(array("status"=>1,"nav_id"=>1))->select()->toArray();
+        $nav_menu = Db::name("nav_menu")->where(array("status"=>1,"nav_id"=>1))->order("list_order ASC")->select()->toArray();
+        $sonArr = $tmpMenu = array();
+        foreach($nav_menu as $key=>$value){
+            if($value["parent_id"]){
+                $tmpMenu[$value["parent_id"]][] = $value;
+                unset($nav_menu[$key]);
+            }
+        }
+        foreach($nav_menu as $key=>$value){
+            if(empty($tmpMenu[$value["id"]])){
+                 $nav_menu[$key]["son"] = [];
+            }else{
+                $nav_menu[$key]["son"] = $tmpMenu[$value["id"]];
+            }
+        }
+        
         $this->assign("navHead",$nav_menu);
         $nav_menu = Db::name("nav_menu")->where(array("status"=>1,"nav_id"=>2))->select()->toArray();
         $this->assign("navFoot",$nav_menu);

@@ -20,7 +20,7 @@ class ProductController extends AdminBaseController
         if($parent_id){
 
         }
-        $data= Db::name("product_post")->field("id,cate_id,post_hits,id,published_time,post_title,post_keywords,thumbnail,recommended,post_status,is_top")->order('create_time DESC')->paginate(20);
+        $data= Db::name("product_post")->field("id,cate_id,post_hits,id,published_time,post_title,post_keywords,thumbnail,recommended,post_status,is_top")->order('create_time DESC')->paginate(20,false,["query"=>$this->request->param()]);
         $this->assign('keyword', isset($param['keyword']) ? $param['keyword'] : '');
         $this->assign('parent_id', isset($param['parent_id']) ? $param['parent_id'] : '');
         $this->assign('products', $data->items());

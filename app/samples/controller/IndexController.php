@@ -12,6 +12,7 @@ namespace app\samples\controller;
 
 use cmf\controller\HomeBaseController;
 use think\Db;
+use think\Request;
 
 class IndexController extends HomeBaseController
 {
@@ -21,10 +22,10 @@ class IndexController extends HomeBaseController
         $slide = Db::name("slide_item")->where(array("slide_id"=>1,"status"=>1))->select()->toArray();
         $this->assign("slideArr",$slide);
         $this->assign('site_info', cmf_get_option('site_info'));
-        $article = Db::name("portal_post")->where(array("post_type"=>1,"post_status"=>1,"recommended"=>1))->field("post_title,post_keywords,post_excerpt,thumbnail,create_time,comment_count,post_excerpt")->select()->toArray();
+        $article = Db::name("portal_post")->where(array("post_type"=>1,"post_status"=>1,"recommended"=>1))->field("post_title,post_keywords,post_excerpt,thumbnail,create_time,comment_count,post_hits,post_excerpt")->select()->toArray();
         $this->assign("artRec",$article);
 
-        $product = Db::name("product_post")->where(array("post_type"=>1,"post_status"=>1,"recommended"=>1))->field("post_title,post_keywords,post_excerpt,thumbnail,create_time,comment_count")->select()->toArray();
+        $product = Db::name("product_post")->where(array("post_type"=>1,"post_status"=>1,"recommended"=>1))->field("post_title,post_keywords,post_excerpt,thumbnail,create_time,comment_count,post_hits")->select()->toArray();
         $this->assign("productList",$product);
         $cateListP = Db::name("product_category")->where(array("parent_id"=>0))->field("id,name,list_order,description,status")->select()->toArray();
         $this->assign('cateListP', $cateListP);
@@ -34,17 +35,34 @@ class IndexController extends HomeBaseController
     }
     public function about()
     {
+
+        $result = Db::name("portal_post")->where(array("id"=>4))->find();
+        $this->assign("result",$result);
         return $this->fetch(':about');
     }
-    public function blog()
+    public function news()
     {
         return $this->fetch(':blog');
     }
     public function contact()
     {
+        if(Request::instance()->isPost()){
+            $data["username"] = input("username");
+            $data["email"] = input("email");
+            $data["title"] = input("title");
+            $data["content"] = input("content");
+            $data["create_time"] = time();
+            Db::name("message")->insert($data);
+            return array("status"=>true,"msg"=>"留言成功");die;
+        }
+        $result = Db::name("portal_post")->where(array("id"=>6))->find();
+        $result["post_content"] = htmlspecialchars_decode($result["post_content"]);
+        $this->assign("result",$result);
+
+        $this->assign('site_info', cmf_get_option('site_info'));
         return $this->fetch(':contact');
     }
-    public function courses()
+    public function product()
     {
         return $this->fetch(':courses');
     }

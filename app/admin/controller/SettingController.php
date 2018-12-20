@@ -46,11 +46,7 @@ class SettingController extends AdminBaseController
      */
     public function site()
     {
-        $content = hook_one('admin_setting_site_view');
 
-        if (!empty($content)) {
-            return $content;
-        }
         $adminSettings  = cmf_get_option('admin_settings');
         $this->assign('site_info', cmf_get_option('site_info'));
         $this->assign("admin_settings", $adminSettings);

@@ -26,12 +26,12 @@
             <button class="btn btn-primary btn-sm js-ajax-submit" type="submit"
                     data-action="{:url('Product/publish',array('no'=>1))}" data-subcheck="true">取消发布
             </button>
-            <button class="btn btn-primary btn-sm js-ajax-submit" type="submit"
+            <!-- <button class="btn btn-primary btn-sm js-ajax-submit" type="submit"
                     data-action="{:url('Product/top',array('yes'=>1))}" data-subcheck="true">置顶
             </button>
             <button class="btn btn-primary btn-sm js-ajax-submit" type="submit"
                     data-action="{:url('Product/top',array('no'=>1))}" data-subcheck="true">取消置顶
-            </button>
+            </button> -->
             <button class="btn btn-primary btn-sm js-ajax-submit" type="submit"
                     data-action="{:url('Product/recommend',array('yes'=>1))}" data-subcheck="true">推荐
             </button>
@@ -89,11 +89,11 @@
                             <else/>
                             <a data-toggle="tooltip" title="未发布"><i class="fa fa-close"></i></a>
                         </notempty>
-                        <notempty name="vo.is_top">
+                        <!-- <notempty name="vo.is_top">
                             <a data-toggle="tooltip" title="已置顶"><i class="fa fa-arrow-up"></i></a>
                             <else/>
                             <a data-toggle="tooltip" title="未置顶"><i class="fa fa-arrow-down"></i></a>
-                        </notempty>
+                        </notempty> -->
                         <notempty name="vo.recommended">
                             <a data-toggle="tooltip" title="已推荐"><i class="fa fa-thumbs-up"></i></a>
                             <else/>

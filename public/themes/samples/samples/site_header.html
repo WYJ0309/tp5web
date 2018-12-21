@@ -99,13 +99,12 @@ li:hover ul#submenu {
                     <div class="col-3 col-lg-9 flex justify-content-end align-content-center">
                         <nav class="dropdownmenu">
                             <ul class="flex flex-column flex-lg-row justify-content-lg-end align-content-center">
-                                
                                 <volist name="navHead" id="vo">
                                     <li  <eq name="nav_key" value="$key">class="current-menu-item"</eq>><a href="{$vo.href}/nav_key/{$key}">{$vo.name}</a>
                                     <notempty name="$vo.son">
                                         <ul id="submenu">
                                         <volist name="$vo.son" id="sons">
-                                            <li><a href="#">{$sons.name}</a></li>
+                                            <li><a href="{$sons.href}">{$sons.name}</a></li>
                                         </volist>
                                         </ul>
                                     </notempty>

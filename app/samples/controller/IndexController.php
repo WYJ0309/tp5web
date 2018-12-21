@@ -21,6 +21,7 @@ class IndexController extends HomeBaseController
 
         $slide = Db::name("slide_item")->where(array("slide_id"=>1,"status"=>1))->select()->toArray();
         $this->assign("slideArr",$slide);
+
         $this->assign('site_info', cmf_get_option('site_info'));
         $article = Db::name("portal_post")->where(array("post_type"=>1,"post_status"=>1,"recommended"=>1))->field("post_title,post_keywords,post_excerpt,thumbnail,create_time,comment_count,post_hits,post_excerpt")->select()->toArray();
         $this->assign("artRec",$article);
@@ -37,11 +38,33 @@ class IndexController extends HomeBaseController
     {
 
         $result = Db::name("portal_post")->where(array("id"=>4))->find();
+        $result["post_content"] = htmlspecialchars_decode($result["post_content"]);
         $this->assign("result",$result);
         return $this->fetch(':about');
     }
     public function news()
     {
+        $kw = input("kw");
+        $cate_id = input("cate_id");
+        $where = array(
+            "cmf_portal_category_post.category_id"=>$cate_id
+        );
+        if($kw){
+            $where["cmf_portal_post.post_title"] = array("like","%".$kw."%");
+        }
+        $field = "cmf_portal_post.id,cmf_portal_post.post_hits,cmf_portal_post.create_time,cmf_portal_post.post_title,cmf_portal_post.post_keywords,cmf_portal_post.post_excerpt,cmf_portal_post.thumbnail";
+        $result = Db::name("portal_post")->join("cmf_portal_category_post","cmf_portal_category_post.post_id = cmf_portal_post.id")->where($where)->field($field)->order("cmf_portal_post.post_hits")->paginate(12,false,["query"=>$this->request->param()]);
+        $this->assign("kw",$kw);
+        $this->assign('newsList', $result->items());
+        $this->assign('page', $result->render());
+        $this->assign("result",$result);
+
+        $lastArr = Db::name("portal_post")->where(array("post_type"=>1))->order("create_time")->field("id,post_title,post_keywords,thumbnail")->limit(0,8)->select()->toArray();
+        $this->assign("lastArr",$lastArr);
+
+        $tagArr = Db::name("portal_tag")->field("name")->limit(0,8)->select()->toArray();
+        $this->assign("tagArr",$tagArr);
+
         return $this->fetch(':blog');
     }
     public function contact()

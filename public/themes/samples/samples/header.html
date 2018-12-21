@@ -1,5 +1,14 @@
 <head>
-    <title>sky-garden</title>
+    <title>{$site_info.site_name|default='sky-garden'}</title>
+        <meta http-equiv="Cache-Control" content="no-transform" /> 
+        <meta http-equiv="Cache-Control" content="no-siteapp" /> 
+        <meta name="copyright" content="Copyright © 2019 skygarden.com Inc. All Rights Reserved." />
+        <meta name="keywords" content="{$site_info.site_seo_title|default=''}{$site_info.site_seo_keywords|default=''}" />
+        <meta name="description" content="{$site_info.site_seo_description|default=''}" />
+        <meta name="renderer" content="webkit"> 
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1" />
+
 
     <!-- Required meta tags -->
     <meta charset="utf-8">

@@ -87,15 +87,48 @@ class IndexController extends HomeBaseController
     }
     public function product()
     {
+        $kw = input("kw");
+        $cate_id = input("cate_id");
+        $where = array(
+            "cate_id"=>$cate_id
+        );
+        if($kw){
+            $where["post_title"] = array("like","%".$kw."%");
+        }
+        $field = "id,post_hits,create_time,post_title,post_keywords,post_excerpt,thumbnail";
+        $result = Db::name("product_post")->where($where)->field($field)->order("post_hits")->paginate(12,false,["query"=>$this->request->param()]);
+        $this->assign("kw",$kw);
+        $this->assign('proList', $result->items());
+        $this->assign('page', $result->render());
+        $this->assign("result",$result);
+
+        $lastArr = Db::name("product_post")->where(array("post_type"=>1))->order("create_time")->field("id,post_title,post_keywords,thumbnail")->limit(0,12)->select()->toArray();
+        $this->assign("lastArr",$lastArr);
+
         return $this->fetch(':courses');
     }
-    public function sigle_courses()
+    public function product_detail()
     {
-        return $this->fetch(':sigle_courses');
+
+        $id = input("post_id");
+        $result = Db::name("product_post")->where(array("id"=>$id))->find();
+        $result["post_content"] = htmlspecialchars_decode($result["post_content"]);
+        $this->assign("result",$result);
+        $site_info = array(
+            "site_name"=>$result["post_title"],
+            "site_seo_keywords"=>$result["post_keywords"],
+            "site_seo_description"=>$result["post_excerpt"],
+        );
+        $this->assign("site_info",$site_info);
+        return $this->fetch(':product_detail');
     }
-    public function sigle_post()
+    public function news_detail()
     {
-        return $this->fetch(':sigle_post');
+        $id = input("post_id");
+        $result = Db::name("portal_post")->where(array("id"=>$id))->find();
+        $result["post_content"] = htmlspecialchars_decode($result["post_content"]);
+        $this->assign("result",$result);
+        return $this->fetch(':news_detail');
     }
 
 

@@ -105,6 +105,7 @@ class IndexController extends HomeBaseController
         $lastArr = Db::name("product_post")->where(array("post_type"=>1))->order("create_time")->field("id,post_title,post_keywords,thumbnail")->limit(0,12)->select()->toArray();
         $this->assign("lastArr",$lastArr);
 
+        $this->assign("site_info",$site_info);
         return $this->fetch(':courses');
     }
     public function product_detail()
@@ -128,6 +129,14 @@ class IndexController extends HomeBaseController
         $result = Db::name("portal_post")->where(array("id"=>$id))->find();
         $result["post_content"] = htmlspecialchars_decode($result["post_content"]);
         $this->assign("result",$result);
+
+        $site_info = array(
+            "site_name"=>$result["post_title"],
+            "site_seo_keywords"=>$result["post_keywords"],
+            "site_seo_description"=>$result["post_excerpt"],
+        );
+        $this->assign("site_info",$site_info);
+
         return $this->fetch(':news_detail');
     }
 
